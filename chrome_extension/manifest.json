@@ -2,12 +2,21 @@
   "name": "One Two Three",
   "version": "0.1",
   "description": "Sync video players!",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "http://localhost/*"
+  ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
-  "web_accessible_resources": ["script.js"],
+  "web_accessible_resources": [
+    "script.js"
+  ],
   "options_page": "options.html",
   "page_action": {
     "default_popup": "popup.html",

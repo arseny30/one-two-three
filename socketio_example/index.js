@@ -10,6 +10,10 @@ io.on('connection', (socket) => {
     console.log('a user connected');
     io.emit('new user connected', socket.id);
 
+    socket.on('abcd', (msg) => {
+        console.log('message: ' + msg);
+        socket.emit('pong', 'pong!');
+    });
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });

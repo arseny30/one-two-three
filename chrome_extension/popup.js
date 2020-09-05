@@ -1,10 +1,10 @@
-const socket = io('http://localhost:3000');
-console.log('client connected')
-socket.emit('ping', 'ping!');
-
-socket.on('pong', function (msg) {
-    console.log(msg)
-});
+function executeFileOnPage(file) {
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        chrome.tabs.executeScript(
+            tabs[0].id,
+            {file: file});
+    });
+}
 
 function executeCodeOnPage(code) {
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
@@ -26,42 +26,41 @@ function dispatchEvent(type, data) {
     );
 }
 
-// inject script.js
-executeFuncOnPage(() => {
-    var s = document.createElement('script');
-    s.src = chrome.runtime.getURL('script.js');
-    s.onload = function () {
-        this.remove();
-    };
-    (document.head || document.documentElement).appendChild(s);
-});
-
 let play = document.getElementById('play');
 let setTimeButton = document.getElementById('setTime');
+let myRoomIdText = document.getElementById('myRoomId');
+let roomIdText = document.getElementById('roomId');
+let roomIdButton = document.getElementById('roomIdSubmit');
 
-play.onclick = function (element) {
+let roomId = '';
+
+chrome.storage.sync.get(['roomId'], function(result) {
+  roomId = result.roomId;	
+  roomIdText.value = roomId;
+  myRoomIdText.value = roomId;
+
+  console.log("Loaded RoomId =", roomId);
+});
+
+roomIdButton.onclick = (element) => {
+  let newRoomId = roomIdText.value;
+  if (newRoomId == roomId) {
+    return;
+  }
+  console.log("Set new roomId=", newRoomId);
+  roomId = newRoomId;
+  dispatchEvent('rdt.setRoomId', {roomId: roomId});
+}
+
+play.onclick = (element) => {
     dispatchEvent('rdt.play');
 };
 
-setTimeButton.onclick = function (element) {
+setTimeButton.onclick = (element) => {
     dispatchEvent('rdt.setTime', {time: 20});
 };
 
 // ---- experimental ---- 
-executeFuncOnPage(() => {
-    window.addEventListener("message", function (event) {
-        // We only accept messages from ourselves
-        if (event.source != window)
-            return;
-
-        if (event.data.type && (event.data.type == "FROM_PAGE")) {
-            console.log("Content script received: " + event.data.text);
-            chrome.runtime.sendMessage({type: "FROM_PAGE", text: event.data.text}, function (response) {
-                console.log(response);
-            });
-        }
-    }, false);
-});
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log(sender.tab ?

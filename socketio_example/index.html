@@ -61,7 +61,8 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
     $(function () {
-        var socket = io();
+	var socket = io({transports: ['polling']});
+        setInterval(()=>{ console.log("emit"); socket.emit('abcd', 'ping!'); }, 2000)
         $('form').submit(function (e) {
             e.preventDefault(); // prevents page reloading
             let msg = $('#m').val();

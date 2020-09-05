@@ -33,5 +33,11 @@
     "48": "images/get_started48.png",
     "128": "images/get_started128.png"
   },
+   "content_scripts": [
+   {
+     "matches": ["https://www.youtube.com/*"],
+     "js": ["third_party/socket.io.js", "content_script.js"]
+   }
+   ],
   "manifest_version": 2
 }

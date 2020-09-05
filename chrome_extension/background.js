@@ -4,10 +4,21 @@
 
 'use strict';
 
+function genRoomId() {
+  //TODO: use secure random
+  return Math.random().toString(36).substring(2);
+}
+
 chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.sync.set({color: '#3aa757'}, function() {
     console.log("The color is green.");
   });
+
+  let roomId = genRoomId();	
+  chrome.storage.sync.set({roomId: roomId}, function() {
+    console.log("RoomId =", roomId);
+  });
+
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [

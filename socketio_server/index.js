@@ -7,9 +7,13 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    socket.on('ping', (msg) => {
+    console.log('new connection');
+    socket.on('my_ping', (msg) => {
         console.log('message: ' + msg);
-        socket.emit('pong', 'pong!');
+        socket.emit('my_pong', 'pong!');
+    });
+    socket.on('setRoomId', (msg) => {
+        console.log('setRoomId', msg);
     });
 });
 

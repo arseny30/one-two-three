@@ -65,9 +65,12 @@ async function doInit() {
     document.addEventListener('rdt.setRoomId', function (e) {
         console.log(e);
         console.log("set roomId=" + e.detail.roomId);
+        socket.emit("setRoomId", e.detail.roomId);
     });
 
     document.addEventListener('rdt.play.onclick', function (e) {
+	let video = document.getElementsByTagName('video')[0];
+	e.detail.time = video.currentTime;  
         socket.emit('rdt.play.onclick', e.detail)
     });
 

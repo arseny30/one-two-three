@@ -26,14 +26,10 @@ let socket;
 
 function initSocketIO() {
     console.log("init socket io");
-    socket = io('http://localhost:3000', {transports: ['polling']});
-    // socket = io('https://52.200.6.77:3000', {transports: ['websocket'], rejectUnauthorized: false});
+    // socket = io('http://localhost:3000', {transports: ['polling']});
+    // socket = io('https://127.0.0.1/', {transports: ['websocket']});
+    socket = io('https://52.200.6.77:3000', {transports: ['websocket']});
     console.log('client connected')
-    // setInterval(() => {
-    // console.log("emit");
-    // socket.emit('my_ping', 'ping!');
-    // }, 2000)
-
     socket.on('my_pong', function (msg) {
         console.log(msg)
     });

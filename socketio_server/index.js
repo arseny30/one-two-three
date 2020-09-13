@@ -16,11 +16,13 @@ io.on('connection', (socket) => {
 
     socket.on('setRoomId', (msg) => {
         console.log('setRoomId', msg);
+        socket.rdtRoomId = msg;
+        socket.join(socket.rdtRoomId)
     });
 
     socket.on('rdt.play.onclick', (msg) => {
         console.log(`received play command on server`, msg)
-        io.emit('rdt.play.onclick', msg);
+        io.to(socket.rdtRoomId).emit('rdt.play.onclick', msg);
     });
 });
 

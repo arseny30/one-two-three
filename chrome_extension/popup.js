@@ -1,11 +1,3 @@
-function executeFileOnPage(file) {
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-        chrome.tabs.executeScript(
-            tabs[0].id,
-            {file: file});
-    });
-}
-
 function executeCodeOnPage(code) {
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
         chrome.tabs.executeScript(
@@ -34,26 +26,26 @@ let roomIdButton = document.getElementById('roomIdSubmit');
 
 let roomId = '';
 
-chrome.storage.sync.get(['roomId'], function(result) {
-  roomId = result.roomId;	
-  roomIdText.value = roomId;
-  myRoomIdText.value = roomId;
+chrome.storage.sync.get(['roomId'], function (result) {
+    roomId = result.roomId;
+    roomIdText.value = roomId;
+    myRoomIdText.value = roomId;
 
-  console.log("Loaded RoomId =", roomId);
+    console.log("Loaded RoomId =", roomId);
 });
 
 roomIdButton.onclick = (element) => {
-  let newRoomId = roomIdText.value;
-  if (newRoomId == roomId) {
-    return;
-  }
-  console.log("Set new roomId=", newRoomId);
-  roomId = newRoomId;
-  dispatchEvent('rdt.setRoomId', {roomId: roomId});
+    let newRoomId = roomIdText.value;
+    if (newRoomId == roomId) {
+        return;
+    }
+    console.log("Set new roomId=", newRoomId);
+    roomId = newRoomId;
+    dispatchEvent('rdt.setRoomId', {roomId: roomId});
 }
 
 play.onclick = (element) => {
-    dispatchEvent('rdt.play');
+    dispatchEvent('rdt.play.onclick');
 };
 
 setTimeButton.onclick = (element) => {

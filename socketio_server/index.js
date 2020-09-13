@@ -8,12 +8,19 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('new connection');
+
     socket.on('my_ping', (msg) => {
         console.log('message: ' + msg);
         socket.emit('my_pong', 'pong!');
     });
+
     socket.on('setRoomId', (msg) => {
         console.log('setRoomId', msg);
+    });
+
+    socket.on('rdt.play.onclick', (msg) => {
+        console.log(`received play command on server`, msg)
+        io.emit('rdt.play.onclick', msg);
     });
 });
 

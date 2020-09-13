@@ -27,6 +27,7 @@ let socket;
 function initSocketIO() {
     console.log("init socket io");
     socket = io('http://localhost:3000', {transports: ['polling']});
+    // socket = io('https://52.200.6.77:3000', {transports: ['websocket'], rejectUnauthorized: false});
     console.log('client connected')
     // setInterval(() => {
     // console.log("emit");

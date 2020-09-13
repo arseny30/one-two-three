@@ -18,8 +18,10 @@ function dispatchEvent(type, data) {
     );
 }
 
-let play = document.getElementById('play');
+let playButton = document.getElementById('play');
 let setTimeButton = document.getElementById('setTime');
+let pauseButton = document.getElementById('pause');
+
 let myRoomIdText = document.getElementById('myRoomId');
 let roomIdText = document.getElementById('roomId');
 let roomIdButton = document.getElementById('roomIdSubmit');
@@ -44,12 +46,16 @@ roomIdButton.onclick = (element) => {
     dispatchEvent('rdt.setRoomId', {roomId: roomId});
 }
 
-play.onclick = (element) => {
-    dispatchEvent('rdt.play.onclick');
+playButton.onclick = (element) => {
+    dispatchEvent('rdt.play.onclick', {state: 'play'});
 };
 
-setTimeButton.onclick = (element) => {
-    dispatchEvent('rdt.setTime', {time: 20});
+// setTimeButton.onclick = (element) => {
+//     dispatchEvent('rdt.setTime', {time: 20});
+// };
+
+pauseButton.onclick = (element) => {
+    dispatchEvent('rdt.play.onclick', {state: 'pause'});
 };
 
 // ---- experimental ---- 

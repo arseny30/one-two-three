@@ -29,12 +29,14 @@ function setTime(time) {
 document.addEventListener('rdt.play', function (e) {
     console.log("Play Video");
     //document.getElementsByClassName("html5-main-video")[0].play();
-    let state = e.detail.state
-    if (state === 'play') {
-        video.play();
-    } else if (state === 'pause') {
-        video.pause();
-    }
+	if ('state' in e.detail) {
+        let state = e.detail.state
+        if (state === 'play') {
+            video.play();
+        } else if (state === 'pause') {
+            video.pause();
+        }
+	}
 
     if ('time' in e.detail) {
         setTime(e.detail.time);

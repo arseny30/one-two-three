@@ -27,9 +27,8 @@ let immunityTill = 0;
 
 function initSocketIO() {
     console.log("init socket io");
-    // socket = io('http://localhost:3000', {transports: ['polling']});
-	socket = io('https://127.0.0.1:3000/', {transports: ['websocket']});
-    //socket = io('https://52.200.6.77:3000', {transports: ['websocket']});
+	//socket = io('https://127.0.0.1:3000/', {transports: ['websocket']});
+	socket = io('https://52.200.6.77:3000', {transports: ['websocket']});
     console.log('client connected')
     socket.on('my_pong', msg => {
         console.log(msg)
@@ -45,8 +44,14 @@ function initSocketIO() {
 const storageGet =
     keys => new Promise(resolve => chrome.storage.sync.get(keys, resolve));
 
+const url = new URL(document.URL);
+const room_id_str = 'one_two_three_room_id';
+
 async function loadRoomId() {
-    let roomId = (await storageGet(["roomId"])).roomId;
+	let roomId = url.searchParams.get(room_id_str);
+	if (!roomId) {
+		roomId = (await storageGet(["roomId"])).roomId;
+	}
     console.log("Got roomId=" + roomId, socket);
     socket.emit("setRoomId", roomId);
 }

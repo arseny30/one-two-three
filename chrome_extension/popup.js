@@ -26,15 +26,51 @@ let myRoomIdText = document.getElementById('myRoomId');
 let roomIdText = document.getElementById('roomId');
 let roomIdButton = document.getElementById('roomIdSubmit');
 
-let roomId = '';
+let sharedLinkText = document.getElementById('sharedLink');
 
-chrome.storage.sync.get(['roomId'], function (result) {
-    roomId = result.roomId;
+function loadUrl() {
+	return new Promise((ok, err) => {
+		chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+			ok(tabs[0].url);
+		})
+	});
+}
+
+let urlPromise = loadUrl();
+
+function loadStoredRoomId() {
+	return new Promise( (ok, err) => {
+		chrome.storage.sync.get(['roomId'], result => ok(result.roomId));
+	});
+}
+
+let storedRoomIdPromise = loadStoredRoomId();
+
+const room_id_str = 'one_two_three_room_id';
+async function loadUrlAndRoomId() {
+	let url = new URL(await urlPromise);
+	let roomId = await storedRoomIdPromise;
+
+	let urlRoomId = url.searchParams.get(room_id_str);
+	if (urlRoomId) {
+		return [url.toString(), urlRoomId, roomId];
+	} else {
+		// TODO: searchParams is read-only...
+		url.searchParams.set(room_id_str, roomId);
+		return [url.toString(), roomId, roomId];
+	}
+}
+
+async function init() {
+	let [url, roomId, myRoomId] = await loadUrlAndRoomId();
+    myRoomIdText.value = myRoomId;
     roomIdText.value = roomId;
-    myRoomIdText.value = roomId;
+	sharedLinkText.value = url;
 
     console.log("Loaded RoomId =", roomId);
-});
+    console.log("Shared link =", url);
+}
+
 
 roomIdButton.onclick = (element) => {
     let newRoomId = roomIdText.value;
@@ -49,6 +85,8 @@ roomIdButton.onclick = (element) => {
 playButton.onclick = (element) => {
     dispatchEvent('rdt.play.onclick', {state: 'play'});
 };
+
+init();
 
 // setTimeButton.onclick = (element) => {
 //     dispatchEvent('rdt.setTime', {time: 20});

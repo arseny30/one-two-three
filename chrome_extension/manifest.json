@@ -42,6 +42,7 @@
       ],
       "js": [
         "third_party/socket.io.js",
+	"common.js",
         "content_script.js"
       ]
     }

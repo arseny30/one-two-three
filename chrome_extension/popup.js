@@ -56,8 +56,9 @@ async function loadUrlAndRoomId() {
 		return [url.toString(), urlRoomId, roomId];
 	} else {
 		// TODO: searchParams is read-only...
-		url.searchParams.set(room_id_str, roomId);
-		return [url.toString(), roomId, roomId];
+		urlRoomId = roomId + "_" + url.toString().hashCode().toString(36);
+		url.searchParams.set(room_id_str, urlRoomId);
+		return [url.toString(), urlRoomId, roomId];
 	}
 }
 

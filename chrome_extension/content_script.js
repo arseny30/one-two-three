@@ -51,6 +51,7 @@ async function loadRoomId() {
 	let roomId = url.searchParams.get(room_id_str);
 	if (!roomId) {
 		roomId = (await storageGet(["roomId"])).roomId;
+		roomId = roomId + "_" + url.toString().hashCode().toString(36);
 	}
     console.log("Got roomId=" + roomId, socket);
     socket.emit("setRoomId", roomId);

@@ -18,6 +18,10 @@ function setTimeNetflix(time) {
 const video = () => document.getElementsByTagName('video')[0];
 
 function setTime(time) {
+	if (time === video().currentTime) {
+		console.log("Ignore redundant setTime", time);
+		return;
+	}
     console.log("Set Time to ", time);
     if (typeof netflix !== "undefined") {
         setTimeNetflix(time);
@@ -27,13 +31,11 @@ function setTime(time) {
 }
 
 document.addEventListener('rdt.play', function (e) {
-    console.log("Play Video");
+    console.log("Play Video", e.detail);
     //document.getElementsByClassName("html5-main-video")[0].play();
 	if ('state' in e.detail) {
         let state = e.detail.state
-        if (state === 'play') {
-            video().play();
-        } else if (state === 'pause') {
+        if (state === 'pause') {
             video().pause();
         }
 	}
@@ -41,6 +43,13 @@ document.addEventListener('rdt.play', function (e) {
     if ('time' in e.detail) {
         setTime(e.detail.time);
     }
+
+	if ('state' in e.detail) {
+        let state = e.detail.state
+        if (state === 'play') {
+            video().play();
+        }
+	}
 
     window.postMessage({type: "FROM_PAGE", text: "Hello from the webpage!"}, "*");
 });

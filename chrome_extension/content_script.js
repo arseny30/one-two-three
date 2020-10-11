@@ -24,6 +24,7 @@ function experimental() {
 
 let socket;
 let immunityTill = 0;
+const myID = Math.random();
 
 function initSocketIO() {
     console.log("init socket io");
@@ -35,7 +36,11 @@ function initSocketIO() {
     });
 
     socket.on('rdt.play.onclick', msg => {
-        console.log(`received play command from server on client`)
+        console.log(`received play command from server on client`, msg)
+		if (msg.id === myID) {
+			console.log(`ignore command from myself`)
+			return;
+		}
 		immunityTill = Date.now() + 550;
         document.dispatchEvent(new CustomEvent('rdt.play', {detail: msg}))
     })
@@ -96,7 +101,7 @@ async function doInit() {
 			console.log("skip play event because of immunity");
 			return;
 		}
-        socket.emit('rdt.play.onclick', {state: 'play', time: video.currentTime})
+        socket.emit('rdt.play.onclick', {id: myID, state: 'play', time: video.currentTime})
 
 	});
 	video.addEventListener('seeked', e => {
@@ -107,7 +112,7 @@ async function doInit() {
 		} else {
 			console.log(`No immunity ${immunityTill} ${Date.now()}`);
 		}
-        socket.emit('rdt.play.onclick', {time: video.currentTime})
+        socket.emit('rdt.play.onclick', {id: myID, time: video.currentTime})
 
 	});
 	video.addEventListener('pause', e => {
@@ -116,11 +121,12 @@ async function doInit() {
 			console.log("skip pause event because of immunity");
 			return;
 		}
-        socket.emit('rdt.play.onclick', {state: 'pause', time: video.currentTime})
+        socket.emit('rdt.play.onclick', {id: myID, state: 'pause', time: video.currentTime})
 	});
 
     document.addEventListener('rdt.play.onclick', e => {
 	    e.detail.time = video.currentTime;  
+	    e.detail.id = myID;
         socket.emit('rdt.play.onclick', e.detail)
     });
 

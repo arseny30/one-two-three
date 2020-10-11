@@ -43,6 +43,7 @@ function initSocketIO() {
 
 const storageGet =
     keys => new Promise(resolve => chrome.storage.sync.get(keys, resolve));
+const sleep = async ms => await new Promise(r => setTimeout(r, ms));
 
 const url = new URL(document.URL);
 const room_id_str = 'one_two_three_room_id';
@@ -76,7 +77,19 @@ async function doInit() {
         socket.emit("setRoomId", e.detail.roomId);
     });
 
-    let video = document.getElementsByTagName('video')[0];
+    let video = null;
+	while (true) {
+		video = document.getElementsByTagName('video')[0];
+		console.log("Got", video);
+		if (video) {
+			break;
+		}
+		console.log("sleep..");
+		await sleep(500);
+		console.log("wake up..");
+	}
+	console.log("Got video DOM element");
+
 	video.addEventListener('play', e => {
 		console.log(`got event 'play' currentTime=${video.currentTime}`);
 		if (immunityTill > Date.now()) {
@@ -89,7 +102,7 @@ async function doInit() {
 	video.addEventListener('seeked', e => {
 		console.log(`got event 'seeked' currentTime=${video.currentTime}`);
 		if (immunityTill > Date.now()) {
-			console.log("skip play event because of immunity");
+			console.log("skip seeked event because of immunity");
 			return;
 		} else {
 			console.log(`No immunity ${immunityTill} ${Date.now()}`);

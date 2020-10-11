@@ -15,14 +15,14 @@ function setTimeNetflix(time) {
     player.seek(time * 1000);
 }
 
-let video = document.getElementsByTagName('video')[0];
+const video = () => document.getElementsByTagName('video')[0];
 
 function setTime(time) {
     console.log("Set Time to ", time);
     if (typeof netflix !== "undefined") {
         setTimeNetflix(time);
     } else {
-        video.currentTime = time;
+        video().currentTime = time;
     }
 }
 
@@ -32,9 +32,9 @@ document.addEventListener('rdt.play', function (e) {
 	if ('state' in e.detail) {
         let state = e.detail.state
         if (state === 'play') {
-            video.play();
+            video().play();
         } else if (state === 'pause') {
-            video.pause();
+            video().pause();
         }
 	}
 

@@ -38,7 +38,8 @@
     {
       "matches": [
         "https://www.youtube.com/*",
-        "https://www.netflix.com/*"
+        "https://www.netflix.com/*",
+        "https://hd.kinopoisk.ru/*"
       ],
       "js": [
         "third_party/socket.io.js",

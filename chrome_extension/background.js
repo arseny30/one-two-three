@@ -27,6 +27,9 @@ chrome.runtime.onInstalled.addListener(function() {
         }),
         new chrome.declarativeContent.PageStateMatcher({
           pageUrl: {hostEquals: 'www.netflix.com'},
+        }),
+        new chrome.declarativeContent.PageStateMatcher({
+          pageUrl: {hostEquals: 'hd.kinopoisk.ru'},
         })
       ],
       actions: [new chrome.declarativeContent.ShowPageAction()]
